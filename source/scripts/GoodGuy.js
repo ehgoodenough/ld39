@@ -1,7 +1,8 @@
 import * as Pixi from "pixi.js"
 import Keyb from "keyb"
 
-const FRICTION = 0.8
+const FRICTION = 0.8 // in percent
+const EXPLODING_DURATION = 500 // in ms
 
 export default class Player extends Pixi.Sprite {
     constructor() {
@@ -64,5 +65,12 @@ export default class Player extends Pixi.Sprite {
     }
     explode(delta) {
         this.rotation += (Math.PI / 12) * delta.f
+
+        this.isExploding += delta.ms
+        if(this.isExploding > EXPLODING_DURATION) {
+            if(!!this.parent) {
+                this.parent.restart()
+            }
+        }
     }
 }

@@ -1,35 +1,31 @@
 import * as Pixi from "pixi.js"
-import Keyb from "keyb"
-
 import {FRAME} from "scripts/Constants.js"
 
-import BadGuy from "scripts/BadGuy.js"
-import GoodGuy from "scripts/GoodGuy.js"
+import Stage from "scripts/Stage.js"
 
-export default class Game extends Pixi.Container {
+export default class Game {
     constructor() {
-        super()
-
         this.renderer = Pixi.autoDetectRenderer({
             width: FRAME.WIDTH, height: FRAME.HEIGHT,
             transparent: true
         })
 
-        this.addChild(this.goodguy = new GoodGuy())
-        this.addChild(this.badguy = new BadGuy())
-
         if("DEVELOPMENT") {
             window.game = this
         }
+
+        this.startStage()
     }
     update(delta) {
-        this.children.forEach((child) => {
-            if(child.update instanceof Function) {
-                child.update(delta)
-            }
-        })
+        if(!!this.stage) {
+            this.stage.update(delta)
+        }
     }
     render() {
-        this.renderer.render(this)
+        this.renderer.render(this.stage)
+    }
+    startStage() {
+        this.stage = new Stage()
+        this.stage.parent = this
     }
 }

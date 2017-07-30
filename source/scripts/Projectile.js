@@ -26,10 +26,12 @@ export default class Projectile extends Pixi.Sprite {
         this.rotation -= Math.PI / 24
 
         if(!!this.parent) {
-            // Collision with the player.
-            var distance = getDistance(this.position, this.parent.goodguy.position)
-            if(distance < COLLISION_DISTANCE) {
-                this.parent.goodguy.isExploding = true
+            // Collision with the good guy.
+            if(!!this.parent.goodguy
+            && !this.parent.goodguy.isExploding) {
+                if(getDistance(this.position, this.parent.goodguy.position) < COLLISION_DISTANCE) {
+                    this.parent.goodguy.isExploding = true
+                }
             }
 
             // Collision with the frame.
