@@ -20,7 +20,7 @@ export default class Boss extends Pixi.Sprite {
 
         this.time = 0
         this.surges = [
-            {amount: 1, time: 0.5, speed: 0.5},
+            // {amount: 1, time: 0.5, speed: 0.5},
             // {amount: 3, time: 2, speed: 1},
             // {amount: 5, time: 0.25},
             // {amount: 7, time: 0.25},
@@ -28,6 +28,9 @@ export default class Boss extends Pixi.Sprite {
 
         this.rotationTime = 0
         this.rotation = Math.PI
+
+        this.maxhull = 10 * 1000
+        this.hull = this.maxhull
     }
     update(delta) {
         if(!this.parent) {
@@ -46,6 +49,17 @@ export default class Boss extends Pixi.Sprite {
                 this.time -= surge.time
                 this.shootProjectiles(surge, this.rotation, this.position)
                 this.surges.push(this.surges.shift())
+            }
+        }
+
+        if(!!this.parent
+        && !!this.parent.goodguy) {
+            if(this.parent.goodguy.isAttacking) {
+                this.hull -= delta.ms
+                if(this.hull <= 0) {
+                    this.hull = 0
+                    console.log("You Win!!")
+                }
             }
         }
     }

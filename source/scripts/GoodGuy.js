@@ -67,8 +67,6 @@ export default class Player extends Pixi.Sprite {
         this.velocity.y *= FRICTION
     }
     attack(delta) {
-        this.isAttacking = (this.power > 0) && !this.isPluggedIn
-
         if(this.isAttacking) {
             this.power -= delta.ms
             if(this.power < 0) {
@@ -93,6 +91,9 @@ export default class Player extends Pixi.Sprite {
                 this.parent.restart()
             }
         }
+    }
+    get isAttacking() {
+        return (this.power > 0) && !this.isPluggedIn
     }
     get isPluggedIn() {
         return Keyb.isDown("<space>")

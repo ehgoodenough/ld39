@@ -1,5 +1,7 @@
 import * as Pixi from "pixi.js"
+
 import {FRAME} from "scripts/Constants.js"
+import {COLORS} from "scripts/Constants.js"
 
 import Stage from "scripts/Stage.js"
 
@@ -7,7 +9,7 @@ export default class Game {
     constructor() {
         this.renderer = Pixi.autoDetectRenderer({
             width: FRAME.WIDTH, height: FRAME.HEIGHT,
-            transparent: true
+            backgroundColor: COLORS.VOID
         })
 
         if("DEVELOPMENT") {
