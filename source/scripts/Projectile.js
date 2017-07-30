@@ -1,5 +1,6 @@
 import * as Pixi from "pixi.js"
 
+const COLLISION_DISTANCE = 10 - 2
 import {FRAME} from "scripts/Constants.js"
 
 export default class Projectile extends Pixi.Sprite {
@@ -25,6 +26,13 @@ export default class Projectile extends Pixi.Sprite {
         this.rotation -= Math.PI / 24
 
         if(!!this.parent) {
+            // Collision with the player.
+            var distance = getDistance(this.position, this.parent.player.position)
+            if(distance < COLLISION_DISTANCE) {
+                this.parent.player.explode()
+            }
+
+            // Collision with the frame.
             if(this.position.x < 0 - this.width
             || this.position.y < 0 - this.height
             || this.position.x > FRAME.WIDTH + this.width
@@ -33,4 +41,10 @@ export default class Projectile extends Pixi.Sprite {
             }
         }
     }
+}
+
+function getDistance(p1,p2) {
+    var x = p1.x - p2.x
+    var y = p1.y - p2.y
+    return Math.sqrt(x*x + y*y)
 }
