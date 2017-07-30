@@ -3,7 +3,6 @@ import Keyb from "keyb"
 
 const FRICTION = 0.8 // in percent
 const EXPLODING_DURATION = 500 // in ms
-const MAXIMUM_POWER = 5000 // in ms
 
 export default class Player extends Pixi.Sprite {
     constructor() {
@@ -18,7 +17,8 @@ export default class Player extends Pixi.Sprite {
 
         this.velocity = new Pixi.Point()
 
-        this.power = MAXIMUM_POWER
+        this.maxpower = 5000
+        this.power = this.maxpower
 
         window.navigator.getBattery().then((battery) => {
             this.battery = battery
@@ -79,8 +79,8 @@ export default class Player extends Pixi.Sprite {
     charge(delta) {
         if(this.isPluggedIn) {
             this.power += delta.ms
-            if(this.power > MAXIMUM_POWER) {
-                this.power == MAXIMUM_POWER
+            if(this.power > this.maxpower) {
+                this.power = this.maxpower
             }
         }
     }
