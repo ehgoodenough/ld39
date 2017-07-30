@@ -1,6 +1,8 @@
 import * as Pixi from "pixi.js"
 import Keyb from "keyb"
 
+const FRICTION = 0.8
+
 export default class Player extends Pixi.Sprite {
     constructor() {
         Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
@@ -9,12 +11,12 @@ export default class Player extends Pixi.Sprite {
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
-        this.position.x = 160 / 2
+        this.position.x = 160 / 4
         this.position.y = 90 / 2
 
         this.velocity = new Pixi.Point()
 
-        this.speed = 1.5
+        this.speed = 1
 
         window.navigator.getBattery().then((battery) => {
             this.battery = battery
@@ -25,20 +27,9 @@ export default class Player extends Pixi.Sprite {
     }
     update(delta) {
         if(this.isExploding) {
-            return
-        }
-
-        if(Keyb.isDown("W") || Keyb.isDown("<up>")) {
-            this.position.y -= 1
-        }
-        if(Keyb.isDown("S") || Keyb.isDown("<down>")) {
-            this.position.y += 1
-        }
-        if(Keyb.isDown("A") || Keyb.isDown("<left>")) {
-            this.position.x -= 1
-        }
-        if(Keyb.isDown("D") || Keyb.isDown("<right>")) {
-            this.position.x += 1
+            this.explode(delta)
+        } else {
+            this.move(delta)
         }
 
         // if(!!this.battery) {
@@ -49,7 +40,29 @@ export default class Player extends Pixi.Sprite {
         //     }
         // }
     }
-    explode() {
-        this.isExploding = true
+    move(delta) {
+        // Polling for input
+        if(Keyb.isDown("W") || Keyb.isDown("<up>")) {
+            this.velocity.y = -1 * this.speed
+        }
+        if(Keyb.isDown("S") || Keyb.isDown("<down>")) {
+            this.velocity.y = +1 * this.speed
+        }
+        if(Keyb.isDown("A") || Keyb.isDown("<left>")) {
+            this.velocity.x = -1 * this.speed
+        }
+        if(Keyb.isDown("D") || Keyb.isDown("<right>")) {
+            this.velocity.x = +1 * this.speed
+        }
+
+        // Translation via velocity
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+
+        this.velocity.x *= FRICTION
+        this.velocity.y *= FRICTION
+    }
+    explode(delta) {
+        this.rotation += (Math.PI / 12) * delta.f
     }
 }

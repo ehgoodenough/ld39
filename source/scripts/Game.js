@@ -3,8 +3,8 @@ import Keyb from "keyb"
 
 import {FRAME} from "scripts/Constants.js"
 
-import Boss from "scripts/Boss.js"
-import Player from "scripts/Player.js"
+import BadGuy from "scripts/BadGuy.js"
+import GoodGuy from "scripts/GoodGuy.js"
 
 export default class Game extends Pixi.Container {
     constructor() {
@@ -15,8 +15,8 @@ export default class Game extends Pixi.Container {
             transparent: true
         })
 
-        this.addChild(this.player = new Player())
-        this.addChild(this.boss = new Boss())
+        this.addChild(this.goodguy = new GoodGuy())
+        this.addChild(this.badguy = new BadGuy())
 
         if("DEVELOPMENT") {
             window.game = this
