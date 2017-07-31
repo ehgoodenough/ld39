@@ -18,8 +18,6 @@ export default class HullBar extends Pixi.Sprite {
         this.position.y = FRAME.HEIGHT - BAR_MARGIN - 10
 
         this.addChild(this.graphics = new Pixi.Graphics())
-
-        this.visible = false
     }
     update(delta) {
         if(!!this.parent

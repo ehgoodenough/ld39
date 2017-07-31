@@ -4,10 +4,14 @@ import Keyb from "keyb"
 const FRICTION = 0.8 // in percent
 const EXPLODING_DURATION = 500 // in ms
 
-export default class Player extends Pixi.Sprite {
+import {FRAME} from "scripts/Constants.js"
+
+export default class GoodGuy extends Pixi.Sprite {
     constructor() {
         Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
         super(Pixi.Texture.from(require("images/starship.png")))
+
+        this.stack = 0
 
         this.anchor.x = 0.5
         this.anchor.y = 0.5
@@ -63,6 +67,11 @@ export default class Player extends Pixi.Sprite {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
+        // Collision with the frame
+        this.position.x = Math.min(Math.max(this.position.x, 0), FRAME.WIDTH)
+        this.position.y = Math.min(Math.max(this.position.y, 0), FRAME.HEIGHT)
+
+        // Deceleration via friction
         this.velocity.x *= FRICTION
         this.velocity.y *= FRICTION
     }
@@ -93,7 +102,9 @@ export default class Player extends Pixi.Sprite {
         }
     }
     get isAttacking() {
-        return (this.power > 0) && !this.isPluggedIn
+        return this.power > 0
+            && !this.isPluggedIn
+            && this.position.x < FRAME.WIDTH * 0.85
     }
     get isPluggedIn() {
         return Keyb.isDown("<space>")
