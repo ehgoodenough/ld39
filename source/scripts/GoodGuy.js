@@ -104,7 +104,7 @@ export default class GoodGuy extends Pixi.Sprite {
     get isAttacking() {
         return this.power > 0
             && !this.isPluggedIn
-            && this.position.x < FRAME.WIDTH * 0.85
+            && this.position.x < FRAME.WIDTH * 0.75
     }
     get isPluggedIn() {
         return Keyb.isDown("<space>")
