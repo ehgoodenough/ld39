@@ -4,6 +4,8 @@ import {FRAME} from "scripts/Constants.js"
 import Projectile from "scripts/Projectile.js"
 import {getDirection} from "scripts/Geometry.js"
 
+const EXPLODING_DURATION = 4000
+
 const SURGES = [
     [
         {amount: 3, time: 1, speed: 0.5, breadth: Math.PI / 64, aimed: true},
@@ -44,24 +46,42 @@ export default class BadGuy  extends Pixi.Sprite {
         this.gun = {time: 0, surges: SURGES[0]}
 
         this.time = 0 // in ms
+
+        this.isExploding = true
     }
     update(delta) {
         this.time += delta.ms
-        this.rotation = Math.sin(this.time / 500) / 3
-        this.position.y = (FRAME.HEIGHT / 2) + (Math.sin(this.time / 500) * 10)
 
-        this.attack(delta)
-        this.die(delta)
+        if(this.hasExploded) {
+            return "he's dead!! :D"
+        } else if(this.isExploding) {
+            this.isExploding += delta.ms
 
-        if(this.hull < this.maxhull * (2/3)) {
-            this.gun.surges = SURGES[1]
-            this.scale.x = 2
-            this.scale.y = 2
-        }
-        if(this.hull < this.maxhull * (1/3)) {
-            this.gun.surges = SURGES[2]
-            this.scale.x = 3
-            this.scale.y = 3
+            if(this.isExploding < EXPLODING_DURATION - 1000) {
+                this.rotation += this.isExploding
+            }
+
+            if(this.isExploding > EXPLODING_DURATION) {
+                this.hasExploded = true
+                this.visible = false
+            }
+        } else {
+            this.rotation = Math.sin(this.time / 500) / 3
+            this.position.y = (FRAME.HEIGHT / 2) + (Math.sin(this.time / 500) * 10)
+
+            this.attack(delta)
+            this.die(delta)
+
+            if(this.hull < this.maxhull * (2/3)) {
+                this.gun.surges = SURGES[1]
+                this.scale.x = 2
+                this.scale.y = 2
+            }
+            if(this.hull < this.maxhull * (1/3)) {
+                this.gun.surges = SURGES[2]
+                this.scale.x = 3
+                this.scale.y = 3
+            }
         }
     }
     attack(delta) {
@@ -87,7 +107,7 @@ export default class BadGuy  extends Pixi.Sprite {
 
                 if(this.hull <= 0) {
                     this.hull = 0
-                    console.log("You Win!!")
+                    this.isExploding = true
                 }
             }
         }

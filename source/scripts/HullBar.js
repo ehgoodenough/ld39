@@ -29,6 +29,17 @@ export default class HullBar extends Pixi.Sprite {
             this.graphics.clear()
             this.graphics.beginFill(COLORS.VOID)
             this.graphics.drawRect(BORDER + width, BORDER, (TICK_COUNT * TICK_WIDTH) - width, TICK_HEIGHT)
+
+            if(badguy.isExploding > 4000 - 500) {
+                this.velocity = this.velocity || 0
+                this.velocity += delta.f
+
+                this.position.y += this.velocity
+                if(this.position.y > FRAME.HEIGHT * 2) {
+                    this.position.y = FRAME.HEIGHT * 2
+                    this.velocity = 0
+                }
+            }
         }
     }
 }

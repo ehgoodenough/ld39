@@ -102,9 +102,11 @@ export default class GoodGuy extends Pixi.Sprite {
         }
     }
     get isAttacking() {
+        let badguy = this.parent.badguy
         return this.power > 0
             && !this.isPluggedIn
             && this.position.x < FRAME.WIDTH * 0.75
+            && badguy.isExploding == false
     }
     get isPluggedIn() {
         return Keyb.isDown("<space>")
