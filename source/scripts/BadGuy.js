@@ -1,10 +1,15 @@
 import * as Pixi from "pixi.js"
 
 import {FRAME} from "scripts/Constants.js"
+import {COLORS} from "scripts/Constants.js"
 import Projectile from "scripts/Projectile.js"
 import {getDirection} from "scripts/Geometry.js"
 
 const EXPLODING_DURATION = 5000
+
+Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
+const UFO_TEXTURE = Pixi.Texture.from(require("images/ufo.png"))
+const ZAPPED_UFO_TEXTURE = Pixi.Texture.from(require("images/ufo-zapped.png"))
 
 const SURGES = [
     [
@@ -30,7 +35,7 @@ const SURGES = [
 
 export default class BadGuy  extends Pixi.Sprite {
     constructor() {
-        super(Pixi.Texture.from(require("images/ufo.png")))
+        super(UFO_TEXTURE)
 
         this.anchor.x = 0.5
         this.anchor.y = 0.5
@@ -52,7 +57,7 @@ export default class BadGuy  extends Pixi.Sprite {
         this.time += delta.ms
 
         if(this.hasExploded) {
-            return "he's dead!! :D"
+            return "he's dead!! :9"
         } else if(this.isExploding) {
             this.isExploding += delta.ms
 
@@ -124,6 +129,14 @@ export default class BadGuy  extends Pixi.Sprite {
                     this.hull = 0
                     this.isExploding = true
                 }
+
+                if(Math.floor(this.time / 50) % 2 == 0) {
+                    this.texture = ZAPPED_UFO_TEXTURE
+                } else {
+                    this.texture = UFO_TEXTURE
+                }
+            } else {
+                this.texture = UFO_TEXTURE
             }
         }
     }
