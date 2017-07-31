@@ -12,12 +12,14 @@ const TICK_HEIGHT = 6
 export default class HullBar extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.from(require("images/hullbar.png")))
-        
+
         this.stack = 1000
         this.position.x = BAR_MARGIN
         this.position.y = FRAME.HEIGHT - BAR_MARGIN - 10
 
         this.addChild(this.graphics = new Pixi.Graphics())
+
+        this.visible = false
     }
     update(delta) {
         if(!!this.parent

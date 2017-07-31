@@ -2,6 +2,7 @@ import * as Pixi from "pixi.js"
 
 const COLLISION_DISTANCE = 10 - 2
 import {FRAME} from "scripts/Constants.js"
+import {getDistance} from "scripts/Geometry.js"
 
 export default class Projectile extends Pixi.Sprite {
     constructor(protoprojectile) {
@@ -43,10 +44,4 @@ export default class Projectile extends Pixi.Sprite {
             }
         }
     }
-}
-
-function getDistance(p1,p2) {
-    var x = p1.x - p2.x
-    var y = p1.y - p2.y
-    return Math.sqrt(x*x + y*y)
 }
