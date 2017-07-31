@@ -10,6 +10,9 @@ import PowerBar from "scripts/PowerBar.js"
 import HullBar from "scripts/HullBar.js"
 import WinScreen from "scripts/WinScreen.js"
 import PromptScreen from "scripts/PromptScreen.js"
+import Star from "scripts/Star.js"
+
+const STAR_COUNT = 60
 
 export default class Stage extends Pixi.Container {
     constructor() {
@@ -26,6 +29,10 @@ export default class Stage extends Pixi.Container {
             this.addChild(this.badguy = new BadGuy())
             this.goodguy.power = this.goodguy.maxpower
             this.hull.position.y = this.hull.behere
+        }
+
+        for(var i = 0; i < STAR_COUNT; i += 1) {
+            this.addChild(new Star())
         }
     }
     update(delta) {
