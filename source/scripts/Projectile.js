@@ -23,6 +23,14 @@ export default class Projectile extends Pixi.Sprite {
         this.speed = protoprojectile.speed || 1
     }
     update(delta) {
+        if(!!this.parent
+        && !!this.parent.badguy) {
+            if(this.parent.badguy.isExploding) {
+                this.alpha -= 0.1
+                return
+            }
+        }
+
         this.move()
         this.crash()
     }

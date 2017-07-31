@@ -77,6 +77,13 @@ export default class BadGuy  extends Pixi.Sprite {
             this.rotation = Math.sin(this.time / 500) / 3
             this.position.y = (FRAME.HEIGHT / 2) + (Math.sin(this.time / 500) * 10)
 
+            if(!!this.parent
+            && !!this.parent.prompt) {
+                if(!this.parent.prompt.isDone) {
+                    return
+                }
+            }
+
             this.attack(delta)
             this.die(delta)
 

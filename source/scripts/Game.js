@@ -24,7 +24,9 @@ export default class Game {
         }
     }
     render() {
-        this.renderer.render(this.stage)
+        if(!!this.stage) {
+            this.renderer.render(this.stage)
+        }
     }
     startStage() {
         this.stage = new Stage()

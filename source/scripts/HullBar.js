@@ -15,11 +15,20 @@ export default class HullBar extends Pixi.Sprite {
 
         this.stack = 1000
         this.position.x = BAR_MARGIN
-        this.position.y = FRAME.HEIGHT - BAR_MARGIN - 10
+        this.position.y = FRAME.HEIGHT - BAR_MARGIN + 10
+        this.behere = FRAME.HEIGHT - BAR_MARGIN - 10
 
         this.addChild(this.graphics = new Pixi.Graphics())
     }
     update(delta) {
+        if(!!this.parent
+        && !!this.parent.prompt) {
+            if(this.parent.prompt.isDone) {
+                if(this.position.y > this.behere) {
+                    this.position.y -= delta.f
+                }
+            }
+        }
         if(!!this.parent
         && !!this.parent.badguy) {
             let badguy = this.parent.badguy

@@ -16,13 +16,13 @@ export default class GoodGuy extends Pixi.Sprite {
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
-        this.position.x = 160 / 4
+        this.position.x = 160 * (1 - 0.85)
         this.position.y = 90 / 2
 
         this.velocity = new Pixi.Point()
 
         this.maxpower = 5000
-        this.power = this.maxpower
+        this.power = 0
 
         window.navigator.getBattery().then((battery) => {
             this.battery = battery
@@ -95,16 +95,20 @@ export default class GoodGuy extends Pixi.Sprite {
     }
     get isAttacking() {
         let badguy = this.parent.badguy
+        // console.log(this.power > 0, !this.isPluggedIn, this.position.x < FRAME.WIDTH * 0.75, !!badguy)
         return this.power > 0
             && !this.isPluggedIn
             && this.position.x < FRAME.WIDTH * 0.75
+            && !!badguy
             && badguy.isExploding <= 0
     }
     get isPluggedIn() {
-        if(this.battery) {
-            return this.battery.charging || Keyb.isDown("<space>")
+        if(Keyb.isDown("<space>")) {
+            return true
         }
-        return Keyb.isDown("<space>")
+        if(this.battery) {
+            return this.battery.charging
+        }
     }
     get speed() {
         return this.power > 0 ? 1 : 0.75

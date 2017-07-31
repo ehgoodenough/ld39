@@ -20,15 +20,18 @@ export default class PowerBar extends Pixi.Sprite {
         this.addChild(this.graphics = new Pixi.Graphics())
     }
     update(delta) {
+        let goodguy
         if(!!this.parent
         && !!this.parent.goodguy) {
-            let goodguy = this.parent.goodguy
-            let percent = Math.max(Math.min(goodguy.power / goodguy.maxpower, 1), 0)
-            let width = Math.ceil(percent * TICK_COUNT) * TICK_WIDTH
-
-            this.graphics.clear()
-            this.graphics.beginFill(COLORS.VOID)
-            this.graphics.drawRect(BORDER_X + width, BORDER_Y, (TICK_COUNT * TICK_WIDTH) - width, TICK_HEIGHT)
+            goodguy = this.parent.goodguy
+        } else {
+            goodguy = {power: 0, maxpower: 1}
         }
+        let percent = Math.max(Math.min(goodguy.power / goodguy.maxpower, 1), 0)
+        let width = Math.ceil(percent * TICK_COUNT) * TICK_WIDTH
+
+        this.graphics.clear()
+        this.graphics.beginFill(COLORS.VOID)
+        this.graphics.drawRect(BORDER_X + width, BORDER_Y, (TICK_COUNT * TICK_WIDTH) - width, TICK_HEIGHT)
     }
 }
