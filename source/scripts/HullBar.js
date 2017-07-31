@@ -30,7 +30,7 @@ export default class HullBar extends Pixi.Sprite {
             this.graphics.beginFill(COLORS.VOID)
             this.graphics.drawRect(BORDER + width, BORDER, (TICK_COUNT * TICK_WIDTH) - width, TICK_HEIGHT)
 
-            if(badguy.isExploding > 4000 - 500) {
+            if(badguy.isExploding > 5000 - 1000) {
                 this.velocity = this.velocity || 0
                 this.velocity += delta.f
 

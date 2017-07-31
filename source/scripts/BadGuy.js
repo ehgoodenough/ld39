@@ -4,7 +4,7 @@ import {FRAME} from "scripts/Constants.js"
 import Projectile from "scripts/Projectile.js"
 import {getDirection} from "scripts/Geometry.js"
 
-const EXPLODING_DURATION = 4000
+const EXPLODING_DURATION = 5000
 
 const SURGES = [
     [
@@ -46,8 +46,7 @@ export default class BadGuy  extends Pixi.Sprite {
         this.gun = {time: 0, surges: SURGES[0]}
 
         this.time = 0 // in ms
-
-        this.isExploding = true
+        this.isExploding = false
     }
     update(delta) {
         this.time += delta.ms
@@ -57,7 +56,16 @@ export default class BadGuy  extends Pixi.Sprite {
         } else if(this.isExploding) {
             this.isExploding += delta.ms
 
-            if(this.isExploding < EXPLODING_DURATION - 1000) {
+            if(this.isExploding > EXPLODING_DURATION - 4000) {
+                this.scale.x = 2
+                this.scale.y = 2
+            }
+            if(this.isExploding > EXPLODING_DURATION - 3000) {
+                this.scale.x = 1
+                this.scale.y = 1
+            }
+
+            if(this.isExploding < EXPLODING_DURATION - 2000) {
                 this.rotation += this.isExploding
             }
 
