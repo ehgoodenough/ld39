@@ -4,6 +4,7 @@ const SHAKE_SPEED = 50
 const SHAKE_DISTANCE = 30
 
 import {FRAME} from "scripts/Constants.js"
+import {Win} from "scripts/Sounds.js"
 
 export default class WinScreen extends Pixi.Sprite {
     constructor() {
@@ -29,6 +30,9 @@ export default class WinScreen extends Pixi.Sprite {
                 this.rotation = Math.sin(this.time / SHAKE_SPEED) / SHAKE_DISTANCE
 
                 if(this.time > 2000) {
+                    if(this.visible != true) {
+                        Win.play()
+                    }
                     this.visible = true
                 }
             }

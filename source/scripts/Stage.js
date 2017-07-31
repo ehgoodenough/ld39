@@ -14,6 +14,11 @@ import Star from "scripts/Star.js"
 
 const STAR_COUNT = 60
 
+var music = new Audio(require("music/latin-industries.mp3"))
+window.music = music
+music.loop = true
+music.volume = 0.15
+
 export default class Stage extends Pixi.Container {
     constructor() {
         super()
@@ -29,6 +34,8 @@ export default class Stage extends Pixi.Container {
             this.addChild(this.badguy = new BadGuy())
             this.goodguy.power = this.goodguy.maxpower
             this.hull.position.y = this.hull.behere
+
+            music.play()
         }
 
         for(var i = 0; i < STAR_COUNT; i += 1) {
@@ -36,6 +43,10 @@ export default class Stage extends Pixi.Container {
         }
     }
     update(delta) {
+        if(this.prompt && this.prompt.isDone) {
+            music.play()
+        }
+
         this.children.forEach((child) => {
             if(child.update instanceof Function) {
                 child.update(delta)

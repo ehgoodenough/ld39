@@ -4,6 +4,9 @@ import {FRAME} from "scripts/Constants.js"
 import {COLORS} from "scripts/Constants.js"
 import Projectile from "scripts/Projectile.js"
 import {getDirection} from "scripts/Geometry.js"
+import {BadGuyGrowing} from "scripts/Sounds.js"
+import {BadGuyDeathLoop} from "scripts/Sounds.js"
+import {BadGuyDeathEnd} from "scripts/Sounds.js"
 
 const EXPLODING_DURATION = 5000
 
@@ -52,13 +55,17 @@ export default class BadGuy  extends Pixi.Sprite {
 
         this.time = 0 // in ms
         this.isExploding = false
+
+        this.stage = 1
     }
     update(delta) {
         this.time += delta.ms
 
         if(this.hasExploded) {
+            BadGuyDeathLoop.pause()
             return "he's dead!! :9"
         } else if(this.isExploding) {
+            this.texture = UFO_TEXTURE
             this.isExploding += delta.ms
 
             if(this.isExploding > EXPLODING_DURATION - 4000) {
@@ -72,9 +79,12 @@ export default class BadGuy  extends Pixi.Sprite {
 
             if(this.isExploding < EXPLODING_DURATION - 2000) {
                 this.rotation += this.isExploding
+            } else {
+                BadGuyDeathLoop.pause()
             }
 
             if(this.isExploding > EXPLODING_DURATION) {
+                BadGuyDeathEnd.play()
                 this.hasExploded = true
                 this.visible = false
             }
@@ -92,15 +102,23 @@ export default class BadGuy  extends Pixi.Sprite {
             this.attack(delta)
             this.die(delta)
 
-            if(this.hull < this.maxhull * (2/3)) {
+            if(this.stage == 1 && this.hull < this.maxhull * (2/3)) {
                 this.gun.surges = SURGES[1]
                 this.scale.x = 2
                 this.scale.y = 2
+                if(this.stage == 1) {
+                    BadGuyGrowing.play()
+                }
+                this.stage = 2
             }
-            if(this.hull < this.maxhull * (1/3)) {
+            if(this.stage == 2 && this.hull < this.maxhull * (1/3)) {
                 this.gun.surges = SURGES[2]
                 this.scale.x = 3
                 this.scale.y = 3
+                if(this.stage == 2) {
+                    BadGuyGrowing.play()
+                }
+                this.stage = 3
             }
         }
     }
@@ -128,6 +146,7 @@ export default class BadGuy  extends Pixi.Sprite {
                 if(this.hull <= 0) {
                     this.hull = 0
                     this.isExploding = true
+                    BadGuyDeathLoop.play()
                 }
 
                 if(Math.floor(this.time / 50) % 2 == 0) {

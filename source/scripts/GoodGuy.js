@@ -6,6 +6,11 @@ const EXPLODING_DURATION = 500 // in ms
 
 import {FRAME} from "scripts/Constants.js"
 
+import {Attacking} from "scripts/Sounds.js"
+import {Recharging} from "scripts/Sounds.js"
+import {Recharged} from "scripts/Sounds.js"
+import {Empty} from "scripts/Sounds.js"
+
 export default class GoodGuy extends Pixi.Sprite {
     constructor() {
         Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
@@ -24,6 +29,12 @@ export default class GoodGuy extends Pixi.Sprite {
         this.maxpower = 5000
         this.power = 0
 
+        this.addChild(this.message = new Pixi.Sprite(Pixi.Texture.from(require("images/time-to-recharge.png"))))
+        this.message.anchor.x = 0.5
+        this.message.anchor.y = 1
+        this.message.position.y = -9
+        this.message.visible = false
+
         window.navigator.getBattery().then((battery) => {
             this.battery = battery
         }).catch((error) => {
@@ -38,6 +49,33 @@ export default class GoodGuy extends Pixi.Sprite {
             this.move(delta)
             this.attack(delta)
             this.charge(delta)
+        }
+
+        if(Attacking.isLoaded) {
+            if(this.isAttacking) {
+                Attacking.play()
+            } else {
+                Attacking.pause()
+                Attacking.currentTime = 0
+            }
+        }
+
+        if(this.power == 0) {
+            this.tint = 0x888888
+        } else {
+            this.tint = 0xFFFFFF
+        }
+
+        if(this.power == 0) {
+            this.message.visible = true
+            this.message.position.x = Math.random() * 2 - 1
+            this.message.position.y = -9 + (Math.random() * 2 - 1)
+        } else {
+            this.message.visible = false
+        }
+
+        if(this.parent && this.parent.badguy && this.parent.badguy.isExploding) {
+            this.message.visible = false
         }
     }
     move(delta) {
@@ -69,17 +107,29 @@ export default class GoodGuy extends Pixi.Sprite {
     }
     attack(delta) {
         if(this.isAttacking) {
-            this.power -= delta.ms
-            if(this.power < 0) {
-                this.power = 0
+            if(this.power > 0) {
+                this.power -= delta.ms
+                if(this.power < 0) {
+                    this.power = 0
+                    Empty.play()
+                }
             }
         }
     }
     charge(delta) {
         if(this.isPluggedIn) {
-            this.power += delta.ms
-            if(this.power > this.maxpower) {
-                this.power = this.maxpower
+            if(this.power < this.maxpower) {
+                this.power += delta.ms
+                if(this.power > this.maxpower) {
+                    this.power = this.maxpower
+                    if(Recharged.isLoaded) {
+                        Recharged.play()
+                    }
+                } else {
+                    if(Recharging.isLoaded) {
+                        Recharging.play()
+                    }
+                }
             }
         }
     }
@@ -95,7 +145,6 @@ export default class GoodGuy extends Pixi.Sprite {
     }
     get isAttacking() {
         let badguy = this.parent.badguy
-        // console.log(this.power > 0, !this.isPluggedIn, this.position.x < FRAME.WIDTH * 0.75, !!badguy)
         return this.power > 0
             && !this.isPluggedIn
             && this.position.x < FRAME.WIDTH * 0.75

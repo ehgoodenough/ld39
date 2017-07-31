@@ -3,6 +3,7 @@ import * as Pixi from "pixi.js"
 const COLLISION_DISTANCE = 10 - 4
 import {FRAME} from "scripts/Constants.js"
 import {getDistance} from "scripts/Geometry.js"
+import {GoodGuyDeath} from "scripts/Sounds.js"
 
 export default class Projectile extends Pixi.Sprite {
     constructor(protoprojectile) {
@@ -55,6 +56,8 @@ export default class Projectile extends Pixi.Sprite {
         && !this.parent.goodguy.isExploding) {
             if(getDistance(this.position, this.parent.goodguy.position) < COLLISION_DISTANCE) {
                 this.parent.goodguy.isExploding = true
+                GoodGuyDeath.currentTime = 0
+                GoodGuyDeath.play()
             }
         }
     }
