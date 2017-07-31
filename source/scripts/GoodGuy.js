@@ -39,14 +39,6 @@ export default class GoodGuy extends Pixi.Sprite {
             this.attack(delta)
             this.charge(delta)
         }
-
-        // if(!!this.battery) {
-        //     if(this.battery.charging) {
-        //         this.tint = 0xCC0000
-        //     } else {
-        //         this.tint = 0x00CC00
-        //     }
-        // }
     }
     move(delta) {
         // Polling for input
@@ -109,6 +101,9 @@ export default class GoodGuy extends Pixi.Sprite {
             && badguy.isExploding <= 0
     }
     get isPluggedIn() {
+        if(this.battery) {
+            return this.battery.charging || Keyb.isDown("<space>")
+        }
         return Keyb.isDown("<space>")
     }
     get speed() {
