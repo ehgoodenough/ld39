@@ -42344,6 +42344,10 @@ var GoodGuy = function (_Pixi$Sprite) {
                 this.message.visible = false;
             }
 
+            if (this.parent && this.parent.prompt && this.parent.prompt.isDone != true) {
+                this.message.visible = false;
+            }
+
             if (this.parent && this.parent.badguy && this.parent.badguy.isExploding) {
                 this.message.visible = false;
             }
