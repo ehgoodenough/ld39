@@ -42437,9 +42437,6 @@ var GoodGuy = function (_Pixi$Sprite) {
             if (_keyb2.default.isDown("<space>")) {
                 return true;
             }
-            if (this.battery) {
-                return this.battery.charging;
-            }
         }
     }, {
         key: "speed",
@@ -42827,7 +42824,7 @@ exports.default = PromptScreen;
 /* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "d880a12ed44f143df4d446df3d6cd11a.png";
+module.exports = __webpack_require__.p + "a42ec96ffbec22e2094e6d95caab0649.png";
 
 /***/ }),
 /* 231 */
